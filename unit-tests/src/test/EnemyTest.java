@@ -14,6 +14,7 @@ import codingfactory.rpgconsole.hero.Hero;
 
 public class EnemyTest {
     Enemy enemy;
+    String sep = ", \t";
 
     //region initialisation
     @BeforeClass
@@ -101,7 +102,6 @@ public class EnemyTest {
 
         assertThat(enemy, hasProperty("atk"));
         assertThat(enemy, hasProperty("atk", is(1)));
-
     }
 
 }

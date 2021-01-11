@@ -15,6 +15,7 @@ import codingfactory.rpgconsole.hero.Hero;
 
 public class HeroTest {
 	Hero hero;
+	String sep = ", \t";
 
 	//region initialisation
 	@BeforeClass
@@ -68,9 +69,9 @@ public class HeroTest {
 
 		// logs results
 		System.out.println(
-				"old level: " + oldLevel + "; new level: " + hero.getLevel() +
-				"\nold atk: " + oldAtk + "; new atk: " + hero.getAtk() +
-				"\nold max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax());
+				"old level: " + oldLevel + "; new level: " + hero.getLevel() + sep +
+				"old atk: " + oldAtk + "; new atk: " + hero.getAtk() + sep +
+				"told max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax());
 	}
 
 	/**
@@ -104,11 +105,56 @@ public class HeroTest {
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax)));
 
 		// logs results
-		System.out.println("first xp increase: " +
-				", \tmax Hp: " + hero.getHpMax() +
-				", \tatk: " + hero.getAtk() +
-				", \tlevel: " + hero.getLevel() +
-				", \txp: " + hero.getXp());
+		System.out.println("first xp increase: " + sep +
+				"max Hp: " + hero.getHpMax() + sep +
+				"atk: " + hero.getAtk() + sep +
+				"level: " + hero.getLevel() + sep +
+				"xp: " + hero.getXp());
+
+		// logs results
+		System.out.println(
+				"old level: " + oldLevel + "; new level: " + hero.getLevel() + sep +
+						"old atk: " + oldAtk + "; new atk: " + hero.getAtk() + sep +
+						"old max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax() + sep +
+						"xp: " + hero.getXp());
+	}
+
+	/**
+	 * Check what happen when hero gain xp, and finally level up
+	 * @throws Exception
+	 */
+	@Test
+	public void testHeroGainXpLevelUp() throws Exception {
+		System.out.println("test gain xp & level up");
+
+		// checks that the hero is a valid hero
+		assertThat(hero, hasProperty("level"));
+		assertThat(hero, hasProperty("atk"));
+		assertThat(hero, hasProperty("hpMax"));
+
+		// gets current values for hero
+		Integer winXp = 20;
+		Integer oldLevel = hero.getLevel();
+		Integer oldAtk = hero.getAtk();
+		Integer oldHpMax = hero.getHpMax();
+		Integer oldXp = hero.getXp();
+
+		// increases XP for the hero
+		hero.increaseXp(winXp);
+
+		// checks that the XP for the hero is correct
+		// AND that he has NOT leveled up
+		assertThat(hero, hasProperty("xp", is(oldXp + winXp)));
+		assertThat(hero, hasProperty("level", is(oldLevel)));
+		assertThat(hero, hasProperty("atk", is(oldAtk)));
+		assertThat(hero, hasProperty("hpMax", is(oldHpMax)));
+
+		// logs results
+		System.out.println("first xp increase: " + sep +
+				"max Hp: " + hero.getHpMax() + sep +
+				"atk: " + hero.getAtk() + sep +
+				"level: " + hero.getLevel() + sep +
+				"xp: " + hero.getXp());
 
 		// increases XP for the hero for a second
 		hero.increaseXp(winXp);
@@ -122,10 +168,10 @@ public class HeroTest {
 
 		// logs results
 		System.out.println(
-				"old level: " + oldLevel + "; new level: " + hero.getLevel() +
-				"\nold atk: " + oldAtk + "; new atk: " + hero.getAtk() +
-				"\nold max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax() +
-				"\nxp: " + hero.getXp());
+				"old level: " + oldLevel + "; new level: " + hero.getLevel() + sep +
+				"old atk: " + oldAtk + "; new atk: " + hero.getAtk() + sep +
+				"old max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax() + sep +
+				"xp: " + hero.getXp());
 	}
 
 	/**
@@ -134,7 +180,8 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroTakeDamage() throws Exception {
-		
+		System.out.println("test hero taking damage from enemy");
+
 		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("hp"));
 
@@ -158,6 +205,8 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroAttack() throws Exception {
+		System.out.println("test hero attack against enemy");
+
 		// creates an enemy
 		Enemy enemy = new Enemy("lapin feroce", 1);
 
@@ -181,6 +230,8 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroProperties() throws Exception {
+		System.out.println("test hero properties");
+
 		assertThat(hero, hasProperty("name"));
         assertThat(hero, hasProperty("name", is("Jaina Portvaillant")));
 
