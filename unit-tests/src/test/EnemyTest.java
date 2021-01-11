@@ -74,10 +74,10 @@ public class EnemyTest {
         assertThat(enemy, hasProperty("level", is(1)));
 
         assertThat(enemy, hasProperty("hp"));
-        assertThat(enemy, hasProperty("hp", is(20)));
+        assertThat(enemy, hasProperty("hp", is(15)));
 
         assertThat(enemy, hasProperty("atk"));
-        assertThat(enemy, hasProperty("atk", is(2)));
+        assertThat(enemy, hasProperty("atk", is(1)));
 
     }
 
