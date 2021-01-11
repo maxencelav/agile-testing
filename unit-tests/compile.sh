@@ -11,3 +11,4 @@ javac -d ../bin/ codingfactory/rpgconsole/game/*.java
 
 ### Tests
 javac -d ../bin/ test/HeroTest.java
+javac -d ../bin/ test/EnemyTest.java

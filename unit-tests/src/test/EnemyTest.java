@@ -14,28 +14,32 @@ import codingfactory.rpgconsole.hero.Hero;
 
 public class EnemyTest {
     Enemy enemy;
-    String sep = ", \t";
+    String sep = "\n";
+
+	static String fx_bold = "\u001B[1m";
+	static String fx_yellow = "\033[33m";
+	static String fx_end = "\033[0m";
 
     //region initialisation
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
-        System.out.println("###### Avant le démarrage ######");
+		System.out.println( fx_yellow + fx_bold + "###### BEFORE TESTS ######" + fx_end);
     }
 
     @AfterClass
     public static void tearDownAfterClass() throws Exception {
-        System.out.println("###### Après tous les tests ######");
+		System.out.println( fx_yellow + fx_bold + "###### AFTER ALL TESTS ######" + fx_end);
     }
 
     @Before
     public void setUp() throws Exception {
         enemy = new Enemy("lapin feroce", 1);
-        System.out.println("\n---- Avant un test ----" );
+		System.out.println("\n---- Test Start ----" );
     }
 
     @After
     public void tearDown() throws Exception {
-        System.out.println("---- Après un test ----\n");
+		System.out.println("---- Test Ended ----\n");
     }
     //endregion
 
@@ -59,7 +63,7 @@ public class EnemyTest {
         assertThat(enemy, hasProperty("hp", is(oldHp-damage)));
 
         // logs results
-        System.out.println("old hp: " + oldHp + "; remaining hp: " + enemy.getHp());
+        System.out.println("Enemy HP: " + oldHp + " -> " + enemy.getHp());
     }
 
 
@@ -82,7 +86,7 @@ public class EnemyTest {
         assertThat(oldHeroHp, greaterThan(hero.getHp()));
 
         // logs result
-        System.out.println("old hero hp: " + oldHeroHp + "; remaining hp: " + hero.getHp());
+        System.out.println("Hero HP: " + oldHeroHp + " -> " + hero.getHp());
     }
 
     /**

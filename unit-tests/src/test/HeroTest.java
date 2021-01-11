@@ -15,28 +15,33 @@ import codingfactory.rpgconsole.hero.Hero;
 
 public class HeroTest {
 	Hero hero;
-	String sep = ", \t";
+	String sep = "\n";
+
+	static String fx_bold = "\u001B[1m";
+	static String fx_yellow = "\033[33m";
+	static String fx_end = "\033[0m";
+
 
 	//region initialisation
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		System.out.println("###### Avant le démarrage ######");
+		System.out.println( fx_yellow + fx_bold + "###### BEFORE TESTS ######" + fx_end);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		System.out.println("###### Après tous les tests ######");
+		System.out.println( fx_yellow + fx_bold + "###### AFTER ALL TESTS ######" + fx_end);
 	}
 
 	@Before
 	public void setUp() throws Exception {
 		hero = new Hero("Jaina Portvaillant");
-		System.out.println("\n---- Avant un test ----" );
+		System.out.println("\n---- Test Start ----" );
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		System.out.println("---- Après un test ----\n");
+		System.out.println("---- Test Ended ----\n");
 	}
 	//endregion
 
@@ -46,7 +51,7 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroLevelUp() throws Exception {
-		System.out.println("test level up");
+		System.out.println(fx_bold + "Test Level UP" + fx_end);
 
 		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("level"));
@@ -69,9 +74,9 @@ public class HeroTest {
 
 		// logs results
 		System.out.println(
-				"old level: " + oldLevel + "; new level: " + hero.getLevel() + sep +
-				"old atk: " + oldAtk + "; new atk: " + hero.getAtk() + sep +
-				"told max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax());
+				"Level: " + oldLevel + " -> " + hero.getLevel() + sep +
+				"ATK: " + oldAtk + " -> " + hero.getAtk() + sep +
+				"Max HP: " + oldHpMax + " -> " + hero.getHpMax());
 	}
 
 	/**
@@ -80,7 +85,7 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroGainXp() throws Exception {
-		System.out.println("test gain xp");
+		System.out.println(fx_bold + "Test XP Gain" + fx_end);
 
 		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("level"));
@@ -105,18 +110,11 @@ public class HeroTest {
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax)));
 
 		// logs results
-		System.out.println("first xp increase: " + sep +
-				"max Hp: " + hero.getHpMax() + sep +
-				"atk: " + hero.getAtk() + sep +
-				"level: " + hero.getLevel() + sep +
-				"xp: " + hero.getXp());
-
-		// logs results
-		System.out.println(
-				"old level: " + oldLevel + "; new level: " + hero.getLevel() + sep +
-						"old atk: " + oldAtk + "; new atk: " + hero.getAtk() + sep +
-						"old max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax() + sep +
-						"xp: " + hero.getXp());
+		System.out.println("XP Increase" + sep +
+				"Max HP: " + hero.getHpMax() + sep +
+				"ATK: " + hero.getAtk() + sep +
+				"Level: " + hero.getLevel() + sep +
+				"XP: " + hero.getXp());
 	}
 
 	/**
@@ -125,7 +123,7 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroGainXpLevelUp() throws Exception {
-		System.out.println("test gain xp & level up");
+		System.out.println(fx_bold + "Test XP Gain & Level UP" + fx_end);
 
 		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("level"));
@@ -150,11 +148,11 @@ public class HeroTest {
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax)));
 
 		// logs results
-		System.out.println("first xp increase: " + sep +
-				"max Hp: " + hero.getHpMax() + sep +
-				"atk: " + hero.getAtk() + sep +
-				"level: " + hero.getLevel() + sep +
-				"xp: " + hero.getXp());
+		System.out.println("1st XP increase" + sep +
+				"Max HP: " + hero.getHpMax() + sep +
+				"ATK: " + hero.getAtk() + sep +
+				"Level: " + hero.getLevel() + sep +
+				"XP: " + hero.getXp());
 
 		// increases XP for the hero for a second
 		hero.increaseXp(winXp);
@@ -166,12 +164,16 @@ public class HeroTest {
 		assertThat(hero, hasProperty("atk", is(oldAtk + 1)));
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax + 3)));
 
+		//
+		System.out.println("\n");
+
+
 		// logs results
-		System.out.println(
-				"old level: " + oldLevel + "; new level: " + hero.getLevel() + sep +
-				"old atk: " + oldAtk + "; new atk: " + hero.getAtk() + sep +
-				"old max Hp: " + oldHpMax + "; new max Hp: " + hero.getHpMax() + sep +
-				"xp: " + hero.getXp());
+		System.out.println("2nd XP increase" + sep +
+				"Max HP: " + oldHpMax + " -> " + hero.getHpMax() + sep +
+				"ATK: " + oldAtk + " -> " + hero.getAtk() + sep +
+				"Level: " + oldLevel + " -> " + hero.getLevel() + sep +
+				"XP: " + hero.getXp());
 	}
 
 	/**
@@ -180,7 +182,7 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroTakeDamage() throws Exception {
-		System.out.println("test hero taking damage from enemy");
+		System.out.println(fx_bold + "Test Hero takes Damage from Enemy" + fx_end);
 
 		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("hp"));
@@ -196,7 +198,7 @@ public class HeroTest {
 		assertThat(hero, hasProperty("hp", is(oldHp-damage)));
 
 		// logs results
-		System.out.println("old hp: " + oldHp + "; remaining hp: " + hero.getHp());
+		System.out.println("Hero HP: " + oldHp + " -> " + hero.getHp());
 	}
 
 	/**
@@ -205,7 +207,7 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroAttack() throws Exception {
-		System.out.println("test hero attack against enemy");
+		System.out.println(fx_bold + "Test Hero Attacks against Enemy" + fx_end);
 
 		// creates an enemy
 		Enemy enemy = new Enemy("lapin feroce", 1);
@@ -221,7 +223,7 @@ public class HeroTest {
 		assertThat(oldEnemyHp, greaterThan(enemy.getHp()));
 
 		// logs result
-		System.out.println("old enemy hp: " + oldEnemyHp + "; remaining hp: " + enemy.getHp());
+		System.out.println("Enemy HP: " + oldEnemyHp + " -> " + enemy.getHp());
 	}
 
 	/**
@@ -230,7 +232,7 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroProperties() throws Exception {
-		System.out.println("test hero properties");
+		System.out.println( fx_bold + "Test Hero Properties" + fx_end);
 
 		assertThat(hero, hasProperty("name"));
         assertThat(hero, hasProperty("name", is("Jaina Portvaillant")));
