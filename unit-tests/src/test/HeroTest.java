@@ -78,8 +78,8 @@ public class HeroTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void testHeroVictory() throws Exception {
-		System.out.println("test victory");
+	public void testHeroGainXp() throws Exception {
+		System.out.println("test gain xp");
 
 		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("level"));
