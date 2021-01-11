@@ -10,7 +10,7 @@ public class Game {
     private Hero hero;
     private Enemy enemy;
 
-    /** CONTRUCTOR METHOD - inciialize variabe gameOver */
+    /** CONTRUCTOR METHOD - initialize variabe gameOver */
     public Game(){
         isGameOver = false;
         inputHandler = new InputHandler();

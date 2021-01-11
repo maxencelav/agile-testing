@@ -61,6 +61,29 @@ public class EnemyTest {
         System.out.println("old hp: " + oldHp + "; remaining hp: " + enemy.getHp());
     }
 
+
+    /**
+     * Check if hero's hp decrease when taking some damage
+     * @throws Exception
+     */
+    @Test
+    public void testEnemyAttack() throws Exception {
+        Hero hero = new Hero("Ilias");
+
+        // gets current value for hero's HP
+        Integer oldHeroHp = hero.getHp();
+
+        // makes the hero take damage from enemy
+        enemy.attack(hero);
+
+        // checks that the hero has lost HP
+        assertThat(hero, hasProperty("hp"));
+        assertThat(oldHeroHp, greaterThan(hero.getHp()));
+
+        // logs result
+        System.out.println("old hero hp: " + oldHeroHp + "; remaining hp: " + hero.getHp());
+    }
+
     /**
      * Check if all enemy's properties are defined
      * @throws Exception
