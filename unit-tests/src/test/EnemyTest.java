@@ -39,11 +39,17 @@ public class EnemyTest {
     //endregion
 
     /**
-     * Check if hero's hp decrease when taking some damage
+     * Check if enemy's hp decrease when taking some damage
      * @throws Exception
      */
     @Test
     public void testEnemyTakeDamage() throws Exception {
+        assertThat(enemy, hasProperty("hp"));
+        Integer oldHp = enemy.getHp();
+        int damage = 3;
+        enemy.takeDamage(damage);
+        assertThat(enemy, hasProperty("hp", is(oldHp-damage)));
+        System.out.println("old hp: " + oldHp + "; remaining hp: " + enemy.getHp());
     }
 
     /**
@@ -53,7 +59,7 @@ public class EnemyTest {
     @Test
     public void testEnemyProperties() throws Exception {
         assertThat(enemy, hasProperty("name"));
-        assertThat(enemy, hasProperty("name", is("Jaina Portvaillant")));
+        assertThat(enemy, hasProperty("name", is("lapin feroce")));
 
         assertThat(enemy, hasProperty("level"));
         assertThat(enemy, hasProperty("level", is(1)));
