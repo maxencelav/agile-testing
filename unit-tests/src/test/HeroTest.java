@@ -47,20 +47,26 @@ public class HeroTest {
 	public void testHeroLevelUp() throws Exception {
 		System.out.println("test level up");
 
+		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("level"));
 		assertThat(hero, hasProperty("atk"));
 		assertThat(hero, hasProperty("hpMax"));
 
+		// gets current values for hero
 		Integer oldLevel = hero.getLevel();
 		Integer oldAtk= hero.getAtk();
 		Integer oldHpMax= hero.getHpMax();
+
+		// adds a level to our hero
 		hero.levelUp();
 
+		// checks that the hero has successfully leveled up
 		assertThat(hero, hasProperty("level", is(oldLevel+1)));
 		assertThat(hero, hasProperty("atk", is(oldAtk+1)));
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax+3)));
 		assertThat(hero, hasProperty("xp", is(0)));
 
+		// logs results
 		System.out.println(
 				"old level: " + oldLevel + "; new level: " + hero.getLevel() +
 				"\nold atk: " + oldAtk + "; new atk: " + hero.getAtk() +
@@ -74,33 +80,47 @@ public class HeroTest {
 	@Test
 	public void testHeroVictory() throws Exception {
 		System.out.println("test victory");
+
+		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("level"));
 		assertThat(hero, hasProperty("atk"));
 		assertThat(hero, hasProperty("hpMax"));
 
+		// gets current values for hero
 		Integer winXp = 20;
 		Integer oldLevel = hero.getLevel();
 		Integer oldAtk = hero.getAtk();
 		Integer oldHpMax = hero.getHpMax();
 		Integer oldXp = hero.getXp();
 
+		// increases XP for the hero
 		hero.increaseXp(winXp);
+
+		// checks that the XP for the hero is correct
+		// AND that he has NOT leveled up
 		assertThat(hero, hasProperty("xp", is(oldXp + winXp)));
 		assertThat(hero, hasProperty("level", is(oldLevel)));
 		assertThat(hero, hasProperty("atk", is(oldAtk)));
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax)));
+
+		// logs results
 		System.out.println("first xp increase: " +
 				", \tmax Hp: " + hero.getHpMax() +
 				", \tatk: " + hero.getAtk() +
 				", \tlevel: " + hero.getLevel() +
 				", \txp: " + hero.getXp());
 
+		// increases XP for the hero for a second
 		hero.increaseXp(winXp);
+
+		// checks that the XP for the hero is correct
+		// AND that he has leveled up
 		assertThat(hero, hasProperty("xp", is(0)));
 		assertThat(hero, hasProperty("level", is(oldLevel + 1)));
 		assertThat(hero, hasProperty("atk", is(oldAtk + 1)));
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax + 3)));
 
+		// logs results
 		System.out.println(
 				"old level: " + oldLevel + "; new level: " + hero.getLevel() +
 				"\nold atk: " + oldAtk + "; new atk: " + hero.getAtk() +
