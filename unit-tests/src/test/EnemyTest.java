@@ -44,11 +44,20 @@ public class EnemyTest {
      */
     @Test
     public void testEnemyTakeDamage() throws Exception {
+        // checks that the enemy is a valid enemy
         assertThat(enemy, hasProperty("hp"));
+
+		//gets current value for enemy
         Integer oldHp = enemy.getHp();
+
+		// makes the enemy take damage
         int damage = 3;
         enemy.takeDamage(damage);
+
+		// checks that the enemy has lower HP
         assertThat(enemy, hasProperty("hp", is(oldHp-damage)));
+
+        // logs results
         System.out.println("old hp: " + oldHp + "; remaining hp: " + enemy.getHp());
     }
 

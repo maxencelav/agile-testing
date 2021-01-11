@@ -164,7 +164,7 @@ public class HeroTest {
 		// gets current value for HP
 		Integer oldEnemyHp = enemy.getHp();
 
-		// makes the enely take damage
+		// makes the enemy take damage
 		hero.attack(enemy);
 
 		// checks that the enemy has lost HP
