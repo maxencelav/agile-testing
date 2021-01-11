@@ -134,11 +134,21 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroTakeDamage() throws Exception {
+		
+		// checks that the hero is a valid hero
 		assertThat(hero, hasProperty("hp"));
+
+		//gets current value for hero
 		Integer oldHp = hero.getHp();
+
+		// makes the hero take damage
 		int damage = 3;
 		hero.takeDamage(damage);
+
+		// checks that the HP for the hero is correct
 		assertThat(hero, hasProperty("hp", is(oldHp-damage)));
+
+		// logs results
 		System.out.println("old hp: " + oldHp + "; remaining hp: " + hero.getHp());
 	}
 
@@ -148,11 +158,20 @@ public class HeroTest {
 	 */
 	@Test
 	public void testHeroAttack() throws Exception {
+		// creates an enemy
 		Enemy enemy = new Enemy("lapin feroce", 1);
+
+		// gets current value for HP
 		Integer oldEnemyHp = enemy.getHp();
+
+		// makes the enely take damage
 		hero.attack(enemy);
+
+		// checks that the enemy has lost HP
 		assertThat(enemy, hasProperty("hp"));
 		assertThat(oldEnemyHp, greaterThan(enemy.getHp()));
+
+		// logs result
 		System.out.println("old enemy hp: " + oldEnemyHp + "; remaining hp: " + enemy.getHp());
 	}
 
