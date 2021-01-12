@@ -48,7 +48,7 @@ public class FunctionalTest {
   		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
      }
 
-    /*
+    
 
     // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
 	@Test
@@ -76,7 +76,7 @@ public class FunctionalTest {
         assertEquals(deleteAllSpecialChar(test), deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
             //driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content")
 	}
-    */
+    
 
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
     @Test
@@ -100,7 +100,7 @@ public class FunctionalTest {
         // Quand je clique sur le 21 du mois courant du calendrier, le premier résultat de la liste qui s'affiche correspond à un événement du 21 du mois courant. (ici vérifier qu'avant le premier résultat de la liste, la date s'affiche puis cliquer sur l'événement de la liste et vérifier que l'on est bien redirigé vers une page qui parle de l'événement du 21.
     }
     
-    /*
+    
 
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
@@ -143,7 +143,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-    */
+    
     @After
     public void tearDown() throws Exception {
         driver.quit();
