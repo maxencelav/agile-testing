@@ -82,6 +82,17 @@ public class FunctionalTest {
     public void testRecherche() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
 
+        // Le titre de la page d'accueil et du h1 contiennent tous les deux *Nature et Aventure*
+
+        // La page de recherche contient un bandeau de recherche avec le champ de recherche, le rayon de recherche, la ville de recherche, un choix d'affichage de la liste entre Groupe et Calendrier.
+
+        // Le tri par défaut est le tri par pertinence.
+
+        // Il y a 4 tri possibles: *pertinence, plus récents, nombre de membres, proximité*
+
+        // Quand je clique sur le choix d'affichage calendrier, la liste se met à jour et affiche des événements jour par jour ainsi qu'un calendrier.
+
+        // Quand je clique sur le 21 du mois courant du calendrier, le premier résultat de la liste qui s'affiche correspond à un événement du 21 du mois courant. (ici vérifier qu'avant le premier résultat de la liste, la date s'affiche puis cliquer sur l'événement de la liste et vérifier que l'on est bien redirigé vers une page qui parle de l'événement du 21.
     }
     
 
