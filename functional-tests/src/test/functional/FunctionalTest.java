@@ -48,6 +48,7 @@ public class FunctionalTest {
   		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
      }
 
+    
     // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
 	@Test
     public void testHomepage() throws Exception {
@@ -75,21 +76,41 @@ public class FunctionalTest {
             //driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content")
 	}
 
-/*
+
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testRecherche() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
+    
 
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testFicheMeetup() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/promenades-et-randonnees/");
 
+        // clickable title
+        // with meetup name, place, number of members, organisators, a button to join the event, and a picture
+
+        //tab banner with "A propos", "Evénements", "Membres", "Photos", "Discussions", "Plus".
+
+        //You should be able to click on past events, upcoming events, and be able to see all the members, and all the photos of a group. (These 4 links available on the page)
+
+        //Si aucun prochain meetup n'est prévu, un bandeau doit apparaitre à la place indiquant ce message en titre: Quel sera notre prochain Meetup ?
+
+        //Si je veux rejoindre le groupe, je dois cliquer sur rejoindre puis entrer mes informations de membre et donc m'identifier via facebook ou google ou identifiant de site. Sinon, je peux aussi m'inscrire et là je dois être rediriger vers /register/?method=email
+
+        // Si j'ai une question, je dois pouvoir contacter l'organisateur depuis la fiche de membre. En cliquant sur contacter je dois alors être automatiquement redirigé vers la page de connexion https://secure.meetup.com/fr-FR/login/
+        WebElement contactLink = driver.findElement(By.cssSelector(".orgInfo-message"));
+        assertEquals(contactLink.getText(), "Contacter");
+        contactLink.click();
+        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        assertThat(driver.getCurrentUrl(), containsString("https://secure.meetup.com/fr-FR/login/"));
+
     }
 
+    
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testJobs() throws Exception {
@@ -105,7 +126,6 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-*/
 
     @After
     public void tearDown() throws Exception {
