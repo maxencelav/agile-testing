@@ -67,15 +67,15 @@ public class FunctionalTest {
         assertEquals(buttonJoin.getAttribute("href"), "https://www.meetup.com/fr-FR/register/");
 
 
-        //Description;  not Working Warning : special char (ex: &nbsp!)
-        WebElement pageDescription = driver.findElement(By.xpath("//meta[@name='description']"));
+        //Description;  not Working without JS (because of special char maybe (ex: &nbsp!))
+        //WebElement pageDescription = driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content");
         JavascriptExecutor executor = (JavascriptExecutor) driver;
-        String test = executor.executeScript("return document.querySelector(\"meta[name=description]\").content").toString();
-        assertEquals(deleteAllSpecialChar(test), deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
-            //driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content")
+        String description = executor.executeScript("return document.querySelector(\"meta[name=description]\").content").toString();
+        assertEquals(deleteAllSpecialChar(description), deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
+
 	}
 
-/*
+
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testRecherche() throws Exception {
@@ -104,7 +104,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-*/
+
 
     @After
     public void tearDown() throws Exception {
