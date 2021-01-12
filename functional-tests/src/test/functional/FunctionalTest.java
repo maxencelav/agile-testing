@@ -19,6 +19,10 @@ public class FunctionalTest {
 
 	private WebDriver driver;
 
+	private String deleteSpecialChar(String string){
+	    return string.replaceAll("&*;", "");
+    }
+
     @Before
     public void setUp() throws Exception {
         System.setProperty("webdriver.chrome.driver","/Library/Java/JUNIT/chromedriver");
@@ -33,22 +37,41 @@ public class FunctionalTest {
     public void testHomepage() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
 		assertEquals(driver.getTitle(), "Partagez vos passions | Meetup");
+		//description, Warning : special char (ex: &nbsp!)
+        assertEquals(deleteSpecialChar(driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content").toString()),
+                deleteSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
+
+
     }
 
-    // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
+
+    // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
     @Test
-    public void testDescription() throws Exception {
+    public void testRecherche() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
-        System.out.println(driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content"));
-        System.out.println("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt.");
-        assertEquals(driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content"), "Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt.");
+
+    }
+
+    // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
+    @Test
+    public void testFicheMeetup() throws Exception {
+        driver.get("https://www.meetup.com/fr-FR/");
+
     }
 
 
-    // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
+    // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
-    public void testH1() throws Exception {
-        
+    public void testJobs() throws Exception {
+        driver.get("https://www.meetup.com/fr-FR/");
+
+    }
+
+    // Test de la Story #2-pixel_perfect (https://trello.com/c/glufGucb/45-homepage)
+    @Test
+    public void testPixelPerfect() throws Exception {
+        driver.get("https://www.meetup.com/fr-FR/");
+
     }
 
 
