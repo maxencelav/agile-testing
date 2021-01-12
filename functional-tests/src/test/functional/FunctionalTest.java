@@ -47,30 +47,31 @@ public class FunctionalTest {
 		// driver.manage().window().maximize();
   		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
      }
-/*
+
+     /*
     // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
 	@Test
     public void testHomepage() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
-		assertEquals(driver.getTitle(), "Partagez vos passions | Meetup");
+		assertEquals("Partagez vos passions | Meetup", driver.getTitle());
 
         //h1
         WebElement h1 = driver.findElement(By.xpath("//h1"));
-        assertEquals(h1.getText(), "Le monde vous tend les bras");
+        assertEquals("Le monde vous tend les bras", h1.getText());
         // sub title;  following-sibling::div[1] == element + div
-        assertEquals(getParent(h1, 1).findElement(By.xpath("following-sibling::div[1]")).getText(), "Rejoignez un groupe local pour rencontrer du monde, tester une nouvelle activité ou partager vos passions.");
+        assertEquals("Rejoignez un groupe local pour rencontrer du monde, tester une nouvelle activité ou partager vos passions.", getParent(h1, 1).findElement(By.xpath("following-sibling::div[1]")).getText());
 
         // button join meetup;
         WebElement buttonJoin = driver.findElement(By.xpath("//a[@id='joinMeetupButton']"));
-        assertEquals(buttonJoin.getText(), "Rejoindre Meetup");
-        assertEquals(buttonJoin.getAttribute("href"), "https://www.meetup.com/fr-FR/register/");
+        assertEquals("Rejoindre Meetup", buttonJoin.getText());
+        assertEquals("https://www.meetup.com/fr-FR/register/", buttonJoin.getAttribute("href"));
 
 
         //Description;  not Working without JS (because of special char maybe (ex: &nbsp!))
         //WebElement pageDescription = driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content");
         JavascriptExecutor executor = (JavascriptExecutor) driver;
         String description = executor.executeScript("return document.querySelector(\"meta[name=description]\").content").toString();
-        assertEquals(deleteAllSpecialChar(description), deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
+        assertEquals(deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."), deleteAllSpecialChar(description));
 
 	}
 
@@ -97,9 +98,34 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/careers/");
 
         //punchline
-        WebElement punchline = driver.findElement(By.cssSelector("main > div > section > div > div"));
-        assertEquals(punchline.getText(), "Join our team, find your people");
+        String selector = "main > div > section > div ";
+        assertEquals("Join our team, find your people", driver.findElement(By.cssSelector(selector + "> div")).getText());
 
+        // button link
+        WebElement aElement = driver.findElement(By.cssSelector(selector + "> div + div + a"));
+        assertEquals("Explore Opportunities", aElement.getText());
+
+        //region explore section
+        //region nb theme
+        //aElement.click();
+        String href = aElement.getAttribute("href").split("#")[1];
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        String sectionNbChild = (String) executor.executeScript("return document.querySelector('#" + href + " > div + div +div > ul ').childElementCount.toString();");
+        //WebElement sectionExplore = driver.findElement(By.cssSelector("#" + aElement.getAttribute('href') + " > div + div +div > ul "));
+        assertEquals("9", sectionNbChild);
+        //endregion
+        //region link more opportunities
+        WebElement aElementMore = driver.findElement(By.cssSelector("#" + href + " + section > div > span > a "));
+        System.out.println("https://www.meetup.com/fr-FR/careers/all-opportunities");
+        System.out.println(aElementMore.getAttribute("href"));
+        //aElementMore.click();
+        //link can not hav fr-FR inhref
+
+        assertThat( aElementMore.getAttribute("href"), containsString("https://www.meetup.com/"));
+        assertThat(aElementMore.getAttribute("href"), containsString("/careers/all-opportunities"));
+
+        //endregion
+        //endregion
     }
 
 /*
