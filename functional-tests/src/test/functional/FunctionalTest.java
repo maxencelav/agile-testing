@@ -55,10 +55,9 @@ public class FunctionalTest {
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testFicheMeetup() throws Exception {
-        driver.get("https://www.meetup.com/fr-FR/ParisGlobalOnline/events/wstdcsycccbrb/");
+        driver.get("https://www.meetup.com/fr-FR/promenades-et-randonnees/");
 
     }
-
 
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
