@@ -55,7 +55,7 @@ public class FunctionalTest {
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testFicheMeetup() throws Exception {
-        driver.get("https://www.meetup.com/fr-FR/");
+        driver.get("https://www.meetup.com/fr-FR/ParisGlobalOnline/events/wstdcsycccbrb/");
 
     }
 
@@ -63,13 +63,15 @@ public class FunctionalTest {
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testJobs() throws Exception {
-        driver.get("https://www.meetup.com/fr-FR/");
+        System.out.println("JOBS");
+        driver.get("https://www.meetup.com/fr-FR/careers/");
 
     }
 
     // Test de la Story #2-pixel_perfect (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testPixelPerfect() throws Exception {
+        System.out.println("PixelPerfect");
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
