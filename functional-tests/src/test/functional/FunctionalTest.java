@@ -100,6 +100,7 @@ public class FunctionalTest {
     @Test
     public void testRecherche() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/find/outdoors-adventure/");
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
 
         // Le titre de la page d'accueil et du h1 contiennent tous les deux *Nature et Aventure*
         assertThat(driver.getTitle(), containsString("Nature et aventure"));
@@ -108,14 +109,28 @@ public class FunctionalTest {
 
         // La page de recherche contient un bandeau de recherche avec le champ de recherche, le rayon de recherche, la ville de recherche, un choix d'affichage de la liste entre Groupe et Calendrier.
 
-        // Le tri par défaut est le tri par pertinence.
+        // region Le tri par défaut est le tri par pertinence.
         String triSelector = "#simple-find-order";
         WebElement triLink = driver.findElement(By.cssSelector( triSelector + " > a"));
         assertEquals("pertinence", triLink.getText());
 
-        // Il y a 4 tri possibles: *pertinence, plus récents, nombre de membres, proximité*
-        WebElement triUl = driver.findElement(By.cssSelector( triSelector + " > ul"));
-        System.out.println(triUl.getText());
+        WebElement triLink2 = driver.findElement(By.cssSelector( triSelector + " > ul li:not(.display-none) a[data-value=default]"));
+        assertEquals("pertinence", triLink2.getAttribute("data-copy"));
+        //endregion
+
+        //region Il y a 4 tri possibles: *pertinence, plus récents, nombre de membres, proximité*
+        Boolean isTriComplete = (Boolean) executor.executeScript(
+                "let list = document.querySelectorAll('" + triSelector + " > ul li:not(.display-none) ');" +
+                        "let arrayFinal = ['pertinence', 'plus récents', 'nombre de membres', 'proximité'];" +
+                        "let array = [];" +
+                        "list.forEach(li =>" +
+                            "{" +
+                            "array.push(li.firstElementChild.getAttribute('data-copy'));" +
+                            "}" +
+                        ");" +
+                "return array.length === arrayFinal.length && array.every((value, index) => value === arrayFinal[index]);");
+        assertEquals(true, isTriComplete);
+        //endregion
 
         // Quand je clique sur le choix d'affichage calendrier, la liste se met à jour et affiche des événements jour par jour ainsi qu'un calendrier.
 
@@ -123,6 +138,7 @@ public class FunctionalTest {
     }
     
     
+/*
 
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
@@ -149,7 +165,6 @@ public class FunctionalTest {
 
     }
 
-/*
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testJobs() throws Exception {
