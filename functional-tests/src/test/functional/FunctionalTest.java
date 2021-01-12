@@ -47,13 +47,12 @@ public class FunctionalTest {
 		// driver.manage().window().maximize();
   		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
      }
-
+/*
     // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
 	@Test
     public void testHomepage() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
 		assertEquals(driver.getTitle(), "Partagez vos passions | Meetup");
-		//description,
 
         //h1
         WebElement h1 = driver.findElement(By.xpath("//h1"));
@@ -89,6 +88,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/promenades-et-randonnees/");
 
     }
+*/
 
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
@@ -96,8 +96,13 @@ public class FunctionalTest {
         System.out.println("JOBS");
         driver.get("https://www.meetup.com/fr-FR/careers/");
 
+        //punchline
+        WebElement punchline = driver.findElement(By.cssSelector("main > div > section > div > div"));
+        assertEquals(punchline.getText(), "Join our team, find your people");
+
     }
 
+/*
     // Test de la Story #2-pixel_perfect (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testPixelPerfect() throws Exception {
@@ -105,7 +110,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-
+*/
 
     @After
     public void tearDown() throws Exception {
