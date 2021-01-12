@@ -15,14 +15,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 
 public class FunctionalTest {
 
 	private WebDriver driver;
 
 	//region helpers function
-	private String deleteSpecialChar(String string){
-	    return string.replaceAll("<[^>]*>", "").replace("&nbsp;", " ").replace("\\u00a0", " ");
+	private String deleteHtmlEntities(String string){
+	    return string.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", " ").replace("\\u00a0", " ");
+    }
+
+    private String deleteAllSpecialChar(String string){
+        return string.replaceAll("[^a-zA-Z0-9]", "");
     }
 
     private WebElement getParent(WebElement element, int parentNb){
@@ -48,7 +53,7 @@ public class FunctionalTest {
     public void testHomepage() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/");
 		assertEquals(driver.getTitle(), "Partagez vos passions | Meetup");
-		//description, Warning : special char (ex: &nbsp!)
+		//description,
 
         //h1
         WebElement h1 = driver.findElement(By.xpath("//h1"));
@@ -62,10 +67,13 @@ public class FunctionalTest {
         assertEquals(buttonJoin.getAttribute("href"), "https://www.meetup.com/fr-FR/register/");
 
 
-        //not Working
-        assertEquals(deleteSpecialChar(driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content").toString()),
-                deleteSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
-    }
+        //Description;  not Working Warning : special char (ex: &nbsp!)
+        WebElement pageDescription = driver.findElement(By.xpath("//meta[@name='description']"));
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        String test = executor.executeScript("return document.querySelector(\"meta[name=description]\").content").toString();
+        assertEquals(deleteAllSpecialChar(test), deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
+            //driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content")
+	}
 
 /*
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
