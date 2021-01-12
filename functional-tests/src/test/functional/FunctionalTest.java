@@ -1,11 +1,11 @@
 package test.functional;
 
 import java.util.concurrent.TimeUnit;
+import java.util.*;
 
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
-
 import static org.junit.Assert.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,7 +15,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.*;
+
 
 public class FunctionalTest {
 
@@ -36,6 +38,23 @@ public class FunctionalTest {
             path += (i==0 ? ".." : "/..");
         }
         return element.findElement(By.xpath(path));
+    }
+
+    public void clickJs(String selector){
+        try{
+            JavascriptExecutor executor = (JavascriptExecutor) driver;
+            executor.executeScript("document.querySelector('" + selector + "').click();");
+        }catch (Exception e){
+        }
+    }
+
+    public void clickSelenium(String selector){
+        try{
+            WebElement contactLink = driver.findElement(By.cssSelector(selector));
+            contactLink.click();
+            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        }catch (Exception e){
+        }
     }
     //endregion
 
@@ -91,41 +110,69 @@ public class FunctionalTest {
     }
 */
 
+
+
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testJobs() throws Exception {
         System.out.println("JOBS");
         driver.get("https://www.meetup.com/fr-FR/careers/");
+        JavascriptExecutor executor = (JavascriptExecutor) driver; // used to execute Js script
 
-        //punchline
-        String selector = "main > div > section > div ";
-        assertEquals("Join our team, find your people", driver.findElement(By.cssSelector(selector + "> div")).getText());
+        //region punchline
+        String mainPunchlineSelector = "main > div > section > div ";
+        assertEquals("Join our team, find your people", driver.findElement(By.cssSelector(mainPunchlineSelector + "> div")).getText());
+        //endregion
 
-        // button link
-        WebElement aElement = driver.findElement(By.cssSelector(selector + "> div + div + a"));
-        assertEquals("Explore Opportunities", aElement.getText());
+        //region button link
+        WebElement aElementExplore = driver.findElement(By.cssSelector(mainPunchlineSelector + "> div + div + a"));
+        assertEquals("Explore Opportunities", aElementExplore.getText());
+
+        //region click on aElement explore with JS (because link 'not clickable')
+        clickJs(mainPunchlineSelector + " > div + div + a ");
+        assertEquals(driver.getCurrentUrl(), "https://www.meetup.com/fr-FR/careers/#open-positions");
+        //endregion
+        //endregion
+
+        //region perks & benefits
+        String perksSelector = "main > div  + div  + div + div > section > div";
+        //region perks punchline
+        WebElement perksPunch = driver.findElement(By.cssSelector( perksSelector  + "  > div "));
+        assertEquals("Perks and benefits", perksPunch.getText());
+        //endregion
+
+        //region check if all perks have img & a text for advantage description
+        //get ul nb of children
+        String perksUlChilds = (String) executor.executeScript("return document.querySelector('" + perksSelector  + " > ul').childElementCount.toString();");
+        int perksUlChildsInt = Integer.parseInt( perksUlChilds);
+
+        //loop to check each child
+        for (int i=1; i<=perksUlChildsInt; i++){
+            Boolean isPerksCorrect = (Boolean) executor.executeScript(
+                    "let selector = '" + perksSelector  + " > ul li:nth-child(" + i + ") > div > div > div' ;" +
+                    "try{" +
+                            "return document.querySelector(selector + ' > img ') !== null && document.querySelector(selector + ' + div ').textContent !==null;" +
+                        "}" +
+                    "catch(error){return false;}");
+            assertEquals(isPerksCorrect, true);
+        }
+        //endregion
+        //endregion
 
         //region explore section
         //region nb theme
-        //aElement.click();
-        String href = aElement.getAttribute("href").split("#")[1];
-        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        //get href from elementExplore (getAttribute("href") return complete URL)
+        String href = aElementExplore.getAttribute("href").split("#")[1];
         String sectionNbChild = (String) executor.executeScript("return document.querySelector('#" + href + " > div + div +div > ul ').childElementCount.toString();");
-        //WebElement sectionExplore = driver.findElement(By.cssSelector("#" + aElement.getAttribute('href') + " > div + div +div > ul "));
-        assertEquals("9", sectionNbChild);
+        assertEquals("9", sectionNbChild); // supposed to contain 9 child on site
         //endregion
-        //region link more opportunities
-        WebElement aElementMore = driver.findElement(By.cssSelector("#" + href + " + section > div > span > a "));
-        System.out.println("https://www.meetup.com/fr-FR/careers/all-opportunities");
-        System.out.println(aElementMore.getAttribute("href"));
-        //aElementMore.click();
-        //link can not hav fr-FR inhref
 
-        assertThat( aElementMore.getAttribute("href"), containsString("https://www.meetup.com/"));
-        assertThat(aElementMore.getAttribute("href"), containsString("/careers/all-opportunities"));
+        //region click link more opportunities, go to naw page
+        clickJs("#" + href + " + section > div > span > a ");
+        assertEquals(driver.getCurrentUrl(), "https://www.meetup.com/fr-FR/careers/all-opportunities");
+        //endregion
+        //endregion
 
-        //endregion
-        //endregion
     }
 
 /*
