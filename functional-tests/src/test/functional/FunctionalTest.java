@@ -14,14 +14,25 @@ import static org.hamcrest.Matchers.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class FunctionalTest {
 
 	private WebDriver driver;
 
+	//region helpers function
 	private String deleteSpecialChar(String string){
-	    return string.replaceAll("&*;", "");
+	    return string.replaceAll("<[^>]*>", "").replace("&nbsp;", " ").replace("\\u00a0", " ");
     }
+
+    private WebElement getParent(WebElement element, int parentNb){
+	    String path = "";
+        for (int i=0; i<parentNb; i++){
+            path += (i==0 ? ".." : "/..");
+        }
+        return element.findElement(By.xpath(path));
+    }
+    //endregion
 
     @Before
     public void setUp() throws Exception {
@@ -38,13 +49,25 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 		assertEquals(driver.getTitle(), "Partagez vos passions | Meetup");
 		//description, Warning : special char (ex: &nbsp!)
+
+        //h1
+        WebElement h1 = driver.findElement(By.xpath("//h1"));
+        assertEquals(h1.getText(), "Le monde vous tend les bras");
+        // sub title;  following-sibling::div[1] == element + div
+        assertEquals(getParent(h1, 1).findElement(By.xpath("following-sibling::div[1]")).getText(), "Rejoignez un groupe local pour rencontrer du monde, tester une nouvelle activité ou partager vos passions.");
+
+        // button join meetup;
+        WebElement buttonJoin = driver.findElement(By.xpath("//a[@id='joinMeetupButton']"));
+        assertEquals(buttonJoin.getText(), "Rejoindre Meetup");
+        assertEquals(buttonJoin.getAttribute("href"), "https://www.meetup.com/fr-FR/register/");
+
+
+        //not Working
         assertEquals(deleteSpecialChar(driver.findElement(By.xpath("//meta[@name='description']")).getAttribute("content").toString()),
                 deleteSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."));
-
-
     }
 
-
+/*
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testRecherche() throws Exception {
@@ -73,7 +96,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-
+*/
 
     @After
     public void tearDown() throws Exception {
