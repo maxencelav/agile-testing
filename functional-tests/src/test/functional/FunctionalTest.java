@@ -205,7 +205,20 @@ public class FunctionalTest {
         //endregion
 
 
-        //tab banner with "A propos", "Evénements", "Membres", "Photos", "Discussions", "Plus".
+        //region check if banner contains "À propos", "Événements", "Membres", "Photos", "Discussions", "Plus".
+        Boolean isBannerComplete = (Boolean) executor.executeScript(
+                "let list = document.querySelectorAll('main >div:nth-child(4) >div>div>div>div>div ul > li span:not([class])');" +
+                        "let arrayFinal = ['À propos', 'Événements', 'Membres', 'Photos', 'Discussions', 'Plus'];" +
+                        "let array = [];" +
+                        "list.forEach(el =>" +
+                            "{" +
+                            "array.push(el.textContent);" +
+                            "}" +
+                        ");" +
+                        "return array.length === arrayFinal.length && array.every((value, index) => value === arrayFinal[index]);");
+        assertEquals(true, isBannerComplete);
+        //endregion
+
 
         //You should be able to click on past events, upcoming events, and be able to see all the members, and all the photos of a group. (These 4 links available on the page)
 
@@ -214,7 +227,7 @@ public class FunctionalTest {
         //Si je veux rejoindre le groupe, je dois cliquer sur rejoindre puis entrer mes informations de membre et donc m'identifier via facebook ou google ou identifiant de site. Sinon, je peux aussi m'inscrire et là je dois être rediriger vers /register/?method=email
 
         // Si j'ai une question, je dois pouvoir contacter l'organisateur depuis la fiche de membre. En cliquant sur contacter je dois alors être automatiquement redirigé vers la page de connexion https://secure.meetup.com/fr-FR/login/
-        // seems that click don't work for Gwen
+        // seems that this click solution doesn't work for Gwen
         /*
         WebElement contactLink = driver.findElement(By.cssSelector(".orgInfo-message"));
         assertEquals(contactLink.getText(), "Contacter");
