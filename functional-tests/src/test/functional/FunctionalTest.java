@@ -48,12 +48,19 @@ public class FunctionalTest {
         return element.findElement(By.xpath(selector));
     }
 
-    public void clickJs(String selector){
+    public Boolean clickJs(String selector){
         try{
             JavascriptExecutor executor = (JavascriptExecutor) driver;
             executor.executeScript("document.querySelector('" + selector + "').click();");
         }catch (Exception e){
+            System.out.println("------ Click fail ------\n\n"  + e);
+            return false;
         }
+        return true;
+    }
+
+    public void checkClickJs(String selector){
+        assertThat(clickJs(selector), is(true));
     }
 
     public void clickSelenium(String selector){
@@ -153,6 +160,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/promenades-et-randonnees/");
         JavascriptExecutor executor = (JavascriptExecutor) driver;
 
+
         //region clickable title with meetup name, place, number of members, organisators, a button to join the event, and a picture
         //region h1 clickable
         WebElement h1 = driver.findElement(By.cssSelector("h1 > a"));
@@ -192,6 +200,7 @@ public class FunctionalTest {
         //endregion
 
         //region button join group
+        String selectorJoinButton = "a#actionButtonLink";
         WebElement joinButton = driver.findElement(By.cssSelector("a#actionButtonLink"));
         assertThat(joinButton, is(notNullValue()));
         assertEquals("Rejoindre ce groupe", joinButton.getText());
@@ -219,22 +228,89 @@ public class FunctionalTest {
         assertEquals(true, isBannerComplete);
         //endregion
 
+        //region You should be able to click on past events, upcoming events, and be able to see all the members, and all the photos of a group. (These 4 links available on the page)
+        //region click on Évenements
+        checkClickJs("a[href*=\"/events/\"]");
 
-        //You should be able to click on past events, upcoming events, and be able to see all the members, and all the photos of a group. (These 4 links available on the page)
+        //can go to past events
+        checkClickJs("a[href*=\"/events/past/\"]");
 
-        //Si aucun prochain meetup n'est prévu, un bandeau doit apparaitre à la place indiquant ce message en titre: Quel sera notre prochain Meetup ?
+        //can go to upcomming event
+        checkClickJs("a[href*=\"/events/\"]");
 
-        //Si je veux rejoindre le groupe, je dois cliquer sur rejoindre puis entrer mes informations de membre et donc m'identifier via facebook ou google ou identifiant de site. Sinon, je peux aussi m'inscrire et là je dois être rediriger vers /register/?method=email
+        //endregion
 
-        // Si j'ai une question, je dois pouvoir contacter l'organisateur depuis la fiche de membre. En cliquant sur contacter je dois alors être automatiquement redirigé vers la page de connexion https://secure.meetup.com/fr-FR/login/
-        // seems that this click solution doesn't work for Gwen
+        //can see all members
+        checkClickJs("a[href*=\"/members/\"]");
+
+        //can see all photos
+        checkClickJs("a[href*=\"/photos/\"]");
+
+        //endregion
+
+
+        //region if none upcoming meet-up, a card should appear with title : Aucun événement à venir
+        //url test https://www.meetup.com/fr-FR/Paris-Drawing-Meetup/events/
+        driver.get("https://www.meetup.com/fr-FR/Paris-Drawing-Meetup/events/");
+        WebElement emptyBanner = driver.findElement(By.cssSelector("div.emptyEventCard"));
+        assertThat(emptyBanner, is(notNullValue()));
+        assertThat(emptyBanner.getText(), containsString("Aucun événement à venir"));
+        //endregion
+
+        //region join group, signin or signup
+        //click on join group
+        checkClickJs(selectorJoinButton);
+
+        //region check signup modal exist (not null)
+        String signupModalSelector = ".signUpModal.modal[role=dialog]";
+        WebElement signupModal = driver.findElement(By.cssSelector(signupModalSelector));
+        assertThat(signupModal, is(notNullValue()));
+        //endregion
+
+        //region check signup with facebook
+        WebElement signupModalFacebook = driver.findElement(By.cssSelector(signupModalSelector + " a[href*=\"www.facebook.com\"]"));
+        assertThat(signupModal, is(notNullValue()));
+        //endregion
+
+        //region check signup with google
+        WebElement signupModalGoogle = driver.findElement(By.cssSelector(signupModalSelector + " a[href*=\"accounts.google.com\"]"));
+        assertThat(signupModalGoogle, is(notNullValue()));
+        //endregion
+
+        //region check signup with site id
+        WebElement signupModalSite = driver.findElement(By.cssSelector(signupModalSelector + " a[href*=\"www.meetup.com\"][href*=\"login\"]"));
+        assertThat(signupModalSite, is(notNullValue()));
+        //endregion
+
+        //region register
+        WebElement signupModalSignin = driver.findElement(By.cssSelector(signupModalSelector + " a[href*=\"www.meetup.com\"][href*=\"/register/?method=email\"]"));
+        assertThat(signupModalSignin, is(notNullValue()));
+        //endregion
+
+        //endregion
+
+        //region contact organizer
+        //go to our first test url (because previous navigation)
+        driver.get("https://www.meetup.com/fr-FR/promenades-et-randonnees/");
+        //region check contact organizer
+        String contactSelector = "a.orgInfo-message[href*=\"/messages/\"]";
+        WebElement contactButton = driver.findElement(By.cssSelector(contactSelector));
+        assertThat(contactButton, is(notNullValue()));
+        checkClickJs(contactSelector);
+        assertThat(driver.getCurrentUrl(), containsString("https://secure.meetup.com/fr-FR/login/"));
+
+        //endregion
+
         /*
+        // seems that this click solution doesn't work for Gwen,
         WebElement contactLink = driver.findElement(By.cssSelector(".orgInfo-message"));
         assertEquals(contactLink.getText(), "Contacter");
         contactLink.click();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         assertThat(driver.getCurrentUrl(), containsString("https://secure.meetup.com/fr-FR/login/"));
         */
+        //endregion
+
     }
 
     /*
@@ -256,7 +332,8 @@ public class FunctionalTest {
         assertEquals("Explore Opportunities", aElementExplore.getText());
 
         //region click on aElement explore with JS (because link 'not clickable')
-        clickJs(mainPunchlineSelector + " > div + div + a ");
+        checkClickJs(mainPunchlineSelector + " > div + div + a ");
+
         assertEquals(driver.getCurrentUrl(), "https://www.meetup.com/fr-FR/careers/#open-positions");
         //endregion
         //endregion
@@ -295,7 +372,8 @@ public class FunctionalTest {
         //endregion
 
         //region click link more opportunities, go to naw page
-        clickJs("#" + href + " + section > div > span > a ");
+        checkClickJs("#" + href + " + section > div > span > a ");
+
         assertEquals(driver.getCurrentUrl(), "https://www.meetup.com/fr-FR/careers/all-opportunities");
         //endregion
         //endregion
