@@ -9,6 +9,7 @@ import org.junit.Before;
 import static org.junit.Assert.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import org.openqa.selenium.WebDriver;
@@ -87,7 +88,7 @@ public class FunctionalTest {
   		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
      }
 
-/*
+
     // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
 	@Test
     public void testHomepage() throws Exception {
@@ -113,7 +114,6 @@ public class FunctionalTest {
         assertEquals(deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."), deleteAllSpecialChar(description));
 
 	}
-        */
 
 
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
@@ -156,7 +156,8 @@ public class FunctionalTest {
         assertThat(calendarGroupDiv, is(notNullValue()));
 
         //region select group
-        WebElement selectGroup = driver.findElement(By.cssSelector(calendarGroupSelector + " a#simple-view-selector-group"));
+        String selectGroupSelector = calendarGroupSelector + " a#simple-view-selector-group";
+        WebElement selectGroup = driver.findElement(By.cssSelector(selectGroupSelector));
         assertThat(selectGroup, is(notNullValue()));
         assertEquals("Groupes", selectGroup.getText());
         //endregion
@@ -202,6 +203,7 @@ public class FunctionalTest {
         WebElement datepickerBefore = driver.findElement(By.cssSelector(datepickerSelector));
         assertThat(datepickerBefore.getAttribute("class"), containsString("display-none"));
         //endregion
+
         //region get event
         String eventsPageSelector = "div#C_pageBody";
         String eventsPageBeforeContent = driver.findElement(By.cssSelector(eventsPageSelector)).getText();
@@ -213,9 +215,10 @@ public class FunctionalTest {
 
         //region after clicking on calendar
         //region  get datepicker
-        WebElement datepicker = driver.findElement(By.cssSelector(datepickerSelector));
-        assertThat(datepicker.getAttribute("class"), not(containsString("display-none")));
+        WebElement datepickerAfter = driver.findElement(By.cssSelector(datepickerSelector));
+        assertThat(datepickerAfter.getAttribute("class"), not(containsString("display-none")));
         //endregion
+
         //region get event
         WebElement eventsPage = driver.findElement(By.cssSelector(eventsPageSelector));
         assertNotSame(eventsPage.getText(), eventsPageBeforeContent);
@@ -225,16 +228,40 @@ public class FunctionalTest {
         //endregion
 
 
-        // Quand je clique sur le 21 du mois courant du calendrier,
-        // le premier résultat de la liste qui s'affiche correspond à un événement du 21 du mois courant.
-        // (ici vérifier qu'avant le premier résultat de la liste,
-        // la date s'affiche puis cliquer sur l'événement de la liste
-        // et vérifier que l'on est bien redirigé vers une page qui parle de l'événement du 21.
+        //region on click on datepicker => events list
 
-        
+        //ensure to be back to calendar view
+        checkClickJs(selectCalendarSelector);
+
+        //region click on date from datepicker
+        String dateSelector = datepickerSelector + " table.ui-datepicker-calendar .date_21";
+        checkClickJs(dateSelector);
+        //endregion
+
+        //region after clicking dapicker, check date
+        //region get events list, check first date
+        String eventListSelector = "#simple-view > div ul >li";
+        WebElement eventsList = driver.findElement(By.cssSelector(eventListSelector));
+        ///date of first events are equals or greater than 21
+        assertThat(21 < Integer.parseInt(eventsList.getAttribute("data-day")), is(true));
+        //assertGreater(21, Integer.parseInt(eventsList.getAttribute("data-day")));
+        //endregion
+
+        //region click on first event
+        checkClickJs(eventListSelector + " + li > ul > li div.chunk > a");
+        //endregion
+
+        //region new page, with event details
+        WebElement dateFromOpenedPage = driver.findElement(By.cssSelector("time[datetime]"));
+        //assertThat(dateFromOpenedPage.getText(), containsString(" 21 "));
+        //search how to use date with java to compare dates days
+        //endregion
+
+        //endregion
+        //endregion
     }
 
-/*
+
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testFicheMeetup() throws Exception {
@@ -467,8 +494,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-*/
-    
+
     @After
     public void tearDown() throws Exception {
         driver.quit();
