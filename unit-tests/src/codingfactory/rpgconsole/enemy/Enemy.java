@@ -17,6 +17,7 @@ public class Enemy {
         this.atk = 1*level;
     }
 
+    //region getters
     public String getName(){
         return this.name;
     }
@@ -32,11 +33,20 @@ public class Enemy {
     public Integer getAtk(){
         return this.atk;
     }
+    //endregion
 
+    /**
+     * decrease enemy's hp depending on received damage
+     * @param damage => inflicted damage's amount
+     */
     public void takeDamage(Integer damage){
         this.hp -= damage;
     }
 
+    /**
+     * attack a hero and inflict damage to it
+     * @param hero => hero under hero attack
+     */
     public void attack(Hero hero) {
         Random rand = new Random();
         int randomNum = rand.nextInt(this.level + 1);

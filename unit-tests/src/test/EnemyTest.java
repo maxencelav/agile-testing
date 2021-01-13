@@ -1,5 +1,5 @@
 package test;
-import codingfactory.rpgconsole.enemy.Enemy;
+
 import org.junit.Test;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -11,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import codingfactory.rpgconsole.hero.Hero;
+import codingfactory.rpgconsole.enemy.Enemy;
 
 public class EnemyTest {
     Enemy enemy;
@@ -49,17 +50,17 @@ public class EnemyTest {
      */
     @Test
     public void testEnemyTakeDamage() throws Exception {
-        // checks that the enemy is a valid enemy
+        // checks that enemy has all needed attributes
         assertThat(enemy, hasProperty("hp"));
 
-		//gets current value for enemy
+		// gets current enemy's Hp
         Integer oldHp = enemy.getHp();
 
-		// makes the enemy take damage
+		// makes enemy take damage
         int damage = 3;
         enemy.takeDamage(damage);
 
-		// checks that the enemy has lower HP
+		// checks that enemy has lower HP
         assertThat(enemy, hasProperty("hp", is(oldHp-damage)));
 
         // logs results
@@ -68,20 +69,23 @@ public class EnemyTest {
 
 
     /**
-     * Check if hero's hp decrease when taking some damage
+     * Check if hero's hp decrease when taking some damage from enemy
      * @throws Exception
      */
     @Test
     public void testEnemyAttack() throws Exception {
         Hero hero = new Hero("Ilias");
 
+        // checks that enemy has all needed attributes
+        assertThat(enemy, hasProperty("hp"));
+
         // gets current value for hero's HP
         Integer oldHeroHp = hero.getHp();
 
-        // makes the hero take damage from enemy
+        // makes hero take damage from enemy
         enemy.attack(hero);
 
-        // checks that the hero has lost HP
+        // checks that hero has lost HP
         assertThat(hero, hasProperty("hp"));
         assertThat(oldHeroHp, greaterThan(hero.getHp()));
 
@@ -90,7 +94,7 @@ public class EnemyTest {
     }
 
     /**
-     * Check if all enemy's properties are defined
+     * Check if all enemy's attributes are defined
      * @throws Exception
      */
     @Test
