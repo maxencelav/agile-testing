@@ -30,14 +30,32 @@ public class FunctionalTest {
 
 
 	//region helpers function
+
+    /**
+     * delete some html entities from a string and return the new string
+     * @param string => string to modify
+     * @return
+     */
 	private String deleteHtmlEntities(String string){
 	    return string.replaceAll("<[^>]*>", "").replaceAll("&nbsp;", " ").replace("\\u00a0", " ");
     }
 
+    /**
+     * delete all special characters from a string and return the new string
+     * @param string => string to modify
+     * @return
+     */
     private String deleteAllSpecialChar(String string){
         return string.replaceAll("[^a-zA-Z0-9]", "");
     }
 
+    /**
+     * get WebElement's parent thanks to xpath.
+     * can get the nth parent, thanks to given int parentNb
+     * @param element => a WebElement
+     * @param parentNb => nth parents (start to 1)
+     * @return
+     */
     private WebElement getParent(WebElement element, int parentNb){
 	    String path = "";
         for (int i=0; i<parentNb; i++){
@@ -46,14 +64,34 @@ public class FunctionalTest {
         return element.findElement(By.xpath(path));
     }
 
+    /**
+     * get WebElement's sibbling thanks to xpath.
+     * get the nth sibbling of a certain markup type, thanks to sibblingNb and sibblingMarkup
+     * @param element       => a WebElement
+     * @param sibblingMarkup => sibbling's markup
+     * @param sibblingNb    => nth sibbling
+     * @return
+     */
     private WebElement getSibbling(WebElement element, String sibblingMarkup, int sibblingNb){
         return element.findElement(By.xpath("following-sibling::" + sibblingMarkup + "[" + sibblingNb +"]"));
     }
 
+    /**
+     * get WebElement's child thanks to xpath.
+     * use a simple selector to get children
+     * @param element   => a WebElement
+     * @param selector  => a string with xpath selector
+     * @return
+     */
     private WebElement getChildByXpath(WebElement element, String selector){
         return element.findElement(By.xpath(selector));
     }
 
+    /**
+     * execute a WebElement click() function with JS.
+     * @param selector  => a CSS selector
+     * @return true if is clickable, else false
+     */
     public Boolean clickJs(String selector){
         try{
             JavascriptExecutor executor = (JavascriptExecutor) driver;
@@ -65,10 +103,18 @@ public class FunctionalTest {
         return true;
     }
 
+    /**
+     * Check if a WebElement is clickable.
+     * @param selector  => a CSS selector
+     */
     public void checkClickJs(String selector){
         assertThat(clickJs(selector), is(true));
     }
 
+    /**
+     * execute a WebElement click() function with Selenium WebElement methods.
+     * @param selector  => a CSS selector
+     */
     public void clickSelenium(String selector){
         try{
             WebElement contactLink = driver.findElement(By.cssSelector(selector));
@@ -492,7 +538,6 @@ public class FunctionalTest {
     public void testPixelPerfect() throws Exception {
         System.out.println("PixelPerfect");
         driver.get("https://www.meetup.com/fr-FR/");
-
     }
 
     @After

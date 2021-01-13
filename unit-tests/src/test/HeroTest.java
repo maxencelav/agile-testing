@@ -1,6 +1,5 @@
 package test;
 
-import codingfactory.rpgconsole.enemy.Enemy;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -12,6 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import codingfactory.rpgconsole.hero.Hero;
+import codingfactory.rpgconsole.enemy.Enemy;
 
 public class HeroTest {
 	Hero hero;
@@ -46,27 +46,27 @@ public class HeroTest {
 	//endregion
 
 	/**
-	 * Check if hero's properties increased when level up, and xp down to 0
+	 * Check if hero's attributes increased when level up, and xp down to 0
 	 * @throws Exception
 	 */
 	@Test
 	public void testHeroLevelUp() throws Exception {
 		System.out.println(fx_bold + "Test Level UP" + fx_end);
 
-		// checks that the hero is a valid hero
+		// checks that hero has all needed attributes
 		assertThat(hero, hasProperty("level"));
 		assertThat(hero, hasProperty("atk"));
 		assertThat(hero, hasProperty("hpMax"));
 
-		// gets current values for hero
+		// gets current hero's attributes
 		Integer oldLevel = hero.getLevel();
 		Integer oldAtk= hero.getAtk();
 		Integer oldHpMax= hero.getHpMax();
 
-		// adds a level to our hero
+		// hero gain a level
 		hero.levelUp();
 
-		// checks that the hero has successfully leveled up
+		// checks that hero has successfully leveled up
 		assertThat(hero, hasProperty("level", is(oldLevel+1)));
 		assertThat(hero, hasProperty("atk", is(oldAtk+1)));
 		assertThat(hero, hasProperty("hpMax", is(oldHpMax+3)));
@@ -80,29 +80,29 @@ public class HeroTest {
 	}
 
 	/**
-	 * Check what happen when hero gain xp, and finally level up
+	 * Check what happen when hero gain xp without level up
 	 * @throws Exception
 	 */
 	@Test
 	public void testHeroGainXp() throws Exception {
 		System.out.println(fx_bold + "Test XP Gain" + fx_end);
 
-		// checks that the hero is a valid hero
+		// checks that hero has all needed attributes
 		assertThat(hero, hasProperty("level"));
 		assertThat(hero, hasProperty("atk"));
 		assertThat(hero, hasProperty("hpMax"));
 
-		// gets current values for hero
+		// gets current hero's attributes
 		Integer winXp = 20;
 		Integer oldLevel = hero.getLevel();
 		Integer oldAtk = hero.getAtk();
 		Integer oldHpMax = hero.getHpMax();
 		Integer oldXp = hero.getXp();
 
-		// increases XP for the hero
+		// increases hero's XP
 		hero.increaseXp(winXp);
 
-		// checks that the XP for the hero is correct
+		// checks that hero's XP is correctly increased
 		// AND that he has NOT leveled up
 		assertThat(hero, hasProperty("xp", is(oldXp + winXp)));
 		assertThat(hero, hasProperty("level", is(oldLevel)));
@@ -118,29 +118,29 @@ public class HeroTest {
 	}
 
 	/**
-	 * Check what happen when hero gain xp, and finally level up
+	 * Check what happen when hero gain xp, and finally level up if enough xp
 	 * @throws Exception
 	 */
 	@Test
 	public void testHeroGainXpLevelUp() throws Exception {
 		System.out.println(fx_bold + "Test XP Gain & Level UP" + fx_end);
 
-		// checks that the hero is a valid hero
+		// checks that hero has all needed attributes
 		assertThat(hero, hasProperty("level"));
 		assertThat(hero, hasProperty("atk"));
 		assertThat(hero, hasProperty("hpMax"));
 
-		// gets current values for hero
+		// gets current hero's attributes
 		Integer winXp = 20;
 		Integer oldLevel = hero.getLevel();
 		Integer oldAtk = hero.getAtk();
 		Integer oldHpMax = hero.getHpMax();
 		Integer oldXp = hero.getXp();
 
-		// increases XP for the hero
+		// increases hero's XP
 		hero.increaseXp(winXp);
 
-		// checks that the XP for the hero is correct
+		// checks that hero's XP correctly increase
 		// AND that he has NOT leveled up
 		assertThat(hero, hasProperty("xp", is(oldXp + winXp)));
 		assertThat(hero, hasProperty("level", is(oldLevel)));
@@ -154,11 +154,11 @@ public class HeroTest {
 				"Level: " + hero.getLevel() + sep +
 				"XP: " + hero.getXp());
 
-		// increases XP for the hero for a second
+		// increases hero's XP one more time
 		hero.increaseXp(winXp);
 
-		// checks that the XP for the hero is correct
-		// AND that he has leveled up
+		// checks that hero's XP correctly decrease to 0
+		// AND that he has leveled up now
 		assertThat(hero, hasProperty("xp", is(0)));
 		assertThat(hero, hasProperty("level", is(oldLevel + 1)));
 		assertThat(hero, hasProperty("atk", is(oldAtk + 1)));
@@ -184,17 +184,17 @@ public class HeroTest {
 	public void testHeroTakeDamage() throws Exception {
 		System.out.println(fx_bold + "Test Hero takes Damage from Enemy" + fx_end);
 
-		// checks that the hero is a valid hero
+		// checks that hero has all needed attributes
 		assertThat(hero, hasProperty("hp"));
 
-		//gets current value for hero
+		// gets current hero's Hp, before taking damage
 		Integer oldHp = hero.getHp();
 
-		// makes the hero take damage
+		// hero take damage
 		int damage = 3;
 		hero.takeDamage(damage);
 
-		// checks that the HP for the hero is correct
+		// checks that hero's Hp correctly decrease
 		assertThat(hero, hasProperty("hp", is(oldHp-damage)));
 
 		// logs results
@@ -212,13 +212,13 @@ public class HeroTest {
 		// creates an enemy
 		Enemy enemy = new Enemy("lapin feroce", 1);
 
-		// gets current value for HP
+		// gets current  enemy's Hp
 		Integer oldEnemyHp = enemy.getHp();
 
-		// makes the enemy take damage
+		// enemy take damage, because hero attack
 		hero.attack(enemy);
 
-		// checks that the enemy has lost HP
+		// checks that enemy has lost HP
 		assertThat(enemy, hasProperty("hp"));
 		assertThat(oldEnemyHp, greaterThan(enemy.getHp()));
 
@@ -227,7 +227,7 @@ public class HeroTest {
 	}
 
 	/**
-	 * Check if all hero's properties are defined
+	 * Check if all hero's attributes are defined
 	 * @throws Exception
 	 */
 	@Test
