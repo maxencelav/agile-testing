@@ -9,6 +9,7 @@ import org.junit.Before;
 import static org.junit.Assert.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 import org.openqa.selenium.WebDriver;
@@ -22,6 +23,11 @@ import org.openqa.selenium.*;
 public class FunctionalTest {
 
 	private WebDriver driver;
+    //harmcrest assert that could be usefull (for array, ...)
+    //assertThat(someCollection, not(hasItem(someItem)))
+    //softAssert.assertThat("Id not found", availableIds, not(hasItemInArray(userId)));
+    //assertThat(new String[] {"foo", "bar"}, hasItemInArray(startsWith("ba")))
+
 
 	//region helpers function
 	private String deleteHtmlEntities(String string){
@@ -82,7 +88,7 @@ public class FunctionalTest {
   		driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
      }
 
-/*
+
     // Test de la Story #2-homepage (https://trello.com/c/glufGucb/45-homepage)
 	@Test
     public void testHomepage() throws Exception {
@@ -116,12 +122,54 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/find/outdoors-adventure/");
         JavascriptExecutor executor = (JavascriptExecutor) driver;
 
-        // Le titre de la page d'accueil et du h1 contiennent tous les deux *Nature et Aventure*
+        //region page title & h1 contains *Nature et aventure*
         assertThat(driver.getTitle(), containsString("Nature et aventure"));
         WebElement h1 = driver.findElement(By.cssSelector("h1"));
         assertThat(h1.getText(), containsString("Nature et aventure"));
+        //endregion
 
-        // La page de recherche contient un bandeau de recherche avec le champ de recherche, le rayon de recherche, la ville de recherche, un choix d'affichage de la liste entre Groupe et Calendrier.
+        //region search fields
+
+        //region search banner
+        WebElement searchForm = driver.findElement(By.cssSelector("#searchForm"));
+        assertThat(searchForm, is(notNullValue()));
+        //endregion
+
+        //region search field
+        WebElement searchField = driver.findElement(By.cssSelector("input#mainKeywords"));
+        assertThat(searchField, is(notNullValue()));
+        //endregion
+
+        //region search radius field
+        WebElement searchRadius = driver.findElement(By.cssSelector("ul#simple-radius"));
+        assertThat(searchRadius, is(notNullValue()));
+        //endregion
+
+        //region city field
+        WebElement searchCity = driver.findElement(By.cssSelector("div#simple-location"));
+        assertThat(searchCity, is(notNullValue()));
+        //endregion
+
+        //region display Group or Calendar
+        String calendarGroupSelector = "ul#simple-view-selector";
+        WebElement calendarGroupDiv = driver.findElement(By.cssSelector(calendarGroupSelector));
+        assertThat(calendarGroupDiv, is(notNullValue()));
+
+        //region select group
+        String selectGroupSelector = calendarGroupSelector + " a#simple-view-selector-group";
+        WebElement selectGroup = driver.findElement(By.cssSelector(selectGroupSelector));
+        assertThat(selectGroup, is(notNullValue()));
+        assertEquals("Groupes", selectGroup.getText());
+        //endregion
+
+        //region select calendar
+        String selectCalendarSelector = calendarGroupSelector + " a#simple-view-selector-event";
+        WebElement selectCalendar = driver.findElement(By.cssSelector(selectCalendarSelector));
+        assertThat(selectCalendar, is(notNullValue()));
+        assertEquals("Calendrier", selectCalendar.getText());
+        //endregion
+        //endregion
+        //endregion
 
         // region Le tri par défaut est le tri par pertinence.
         String triSelector = "#simple-find-order";
@@ -132,7 +180,7 @@ public class FunctionalTest {
         assertEquals("pertinence", triLink2.getAttribute("data-copy"));
         //endregion
 
-        //region Il y a 4 tri possibles: *pertinence, plus récents, nombre de membres, proximité*
+        //region 4 available sort : *pertinence, plus récents, nombre de membres, proximité*
         Boolean isTriComplete = (Boolean) executor.executeScript(
                 "let list = document.querySelectorAll('" + triSelector + " > ul li:not(.display-none) ');" +
                         "let arrayFinal = ['pertinence', 'plus récents', 'nombre de membres', 'proximité'];" +
@@ -146,13 +194,73 @@ public class FunctionalTest {
         assertEquals(true, isTriComplete);
         //endregion
 
-        // Quand je clique sur le choix d'affichage calendrier, la liste se met à jour et affiche des événements jour par jour ainsi qu'un calendrier.
+        //region click on calendar
+        // la liste se met à jour et affiche des événements jour par jour ainsi qu'un calendrier.
 
-        // Quand je clique sur le 21 du mois courant du calendrier, le premier résultat de la liste qui s'affiche correspond à un événement du 21 du mois courant. (ici vérifier qu'avant le premier résultat de la liste, la date s'affiche puis cliquer sur l'événement de la liste et vérifier que l'on est bien redirigé vers une page qui parle de l'événement du 21.
+        //region before clicking calendar
+        //region try get datepicker
+        String datepickerSelector = "div#simple-event-filter-column";
+        WebElement datepickerBefore = driver.findElement(By.cssSelector(datepickerSelector));
+        assertThat(datepickerBefore.getAttribute("class"), containsString("display-none"));
+        //endregion
+
+        //region get event
+        String eventsPageSelector = "div#C_pageBody";
+        String eventsPageBeforeContent = driver.findElement(By.cssSelector(eventsPageSelector)).getText();
+        //endregion
+        //endregion
+
+        //click on calendar
+        checkClickJs(selectCalendarSelector);
+
+        //region after clicking on calendar
+        //region  get datepicker
+        WebElement datepickerAfter = driver.findElement(By.cssSelector(datepickerSelector));
+        assertThat(datepickerAfter.getAttribute("class"), not(containsString("display-none")));
+        //endregion
+
+        //region get event
+        WebElement eventsPage = driver.findElement(By.cssSelector(eventsPageSelector));
+        assertNotSame(eventsPage.getText(), eventsPageBeforeContent);
+        //endregion
+        //endregion
+
+        //endregion
+
+
+        //region on click on datepicker => events list
+
+        //ensure to be back to calendar view
+        checkClickJs(selectCalendarSelector);
+
+        //region click on date from datepicker
+        String dateSelector = datepickerSelector + " table.ui-datepicker-calendar .date_21";
+        checkClickJs(dateSelector);
+        //endregion
+
+        //region after clicking dapicker, check date
+        //region get events list, check first date
+        String eventListSelector = "#simple-view > div ul >li";
+        WebElement eventsList = driver.findElement(By.cssSelector(eventListSelector));
+        ///date of first events are equals or greater than 21
+        assertThat(21 < Integer.parseInt(eventsList.getAttribute("data-day")), is(true));
+        //assertGreater(21, Integer.parseInt(eventsList.getAttribute("data-day")));
+        //endregion
+
+        //region click on first event
+        checkClickJs(eventListSelector + " + li > ul > li div.chunk > a");
+        //endregion
+
+        //region new page, with event details
+        WebElement dateFromOpenedPage = driver.findElement(By.cssSelector("time[datetime]"));
+        //assertThat(dateFromOpenedPage.getText(), containsString(" 21 "));
+        //search how to use date with java to compare dates days
+        //endregion
+
+        //endregion
+        //endregion
     }
-        */
 
-    
 
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
@@ -301,19 +409,18 @@ public class FunctionalTest {
 
         //endregion
 
-        /*
+
         // seems that this click solution doesn't work for Gwen,
-        WebElement contactLink = driver.findElement(By.cssSelector(".orgInfo-message"));
-        assertEquals(contactLink.getText(), "Contacter");
-        contactLink.click();
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        assertThat(driver.getCurrentUrl(), containsString("https://secure.meetup.com/fr-FR/login/"));
-        */
+        //WebElement contactLink = driver.findElement(By.cssSelector(".orgInfo-message"));
+        //assertEquals(contactLink.getText(), "Contacter");
+        //contactLink.click();
+        //driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+        //assertThat(driver.getCurrentUrl(), containsString("https://secure.meetup.com/fr-FR/login/"));
+
         //endregion
 
     }
 
-    /*
 
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
@@ -387,8 +494,7 @@ public class FunctionalTest {
         driver.get("https://www.meetup.com/fr-FR/");
 
     }
-*/
-    
+
     @After
     public void tearDown() throws Exception {
         driver.quit();
