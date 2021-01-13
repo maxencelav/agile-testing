@@ -40,6 +40,14 @@ public class FunctionalTest {
         return element.findElement(By.xpath(path));
     }
 
+    private WebElement getSibbling(WebElement element, String sibblingMarkup, int sibblingNb){
+        return element.findElement(By.xpath("following-sibling::" + sibblingMarkup + "[" + sibblingNb +"]"));
+    }
+
+    private WebElement getChildByXpath(WebElement element, String selector){
+        return element.findElement(By.xpath(selector));
+    }
+
     public void clickJs(String selector){
         try{
             JavascriptExecutor executor = (JavascriptExecutor) driver;
@@ -93,7 +101,6 @@ public class FunctionalTest {
         assertEquals(deleteAllSpecialChar("Partagez vos passions et faites bouger votre ville ! Meetup vous aide à rencontrer des personnes près de chez vous, autour de vos centres d'intérêt."), deleteAllSpecialChar(description));
 
 	}
-    */
 
 
     // Test de la Story #2-recherche (https://trello.com/c/glufGucb/45-homepage)
@@ -136,17 +143,67 @@ public class FunctionalTest {
 
         // Quand je clique sur le 21 du mois courant du calendrier, le premier résultat de la liste qui s'affiche correspond à un événement du 21 du mois courant. (ici vérifier qu'avant le premier résultat de la liste, la date s'affiche puis cliquer sur l'événement de la liste et vérifier que l'on est bien redirigé vers une page qui parle de l'événement du 21.
     }
+        */
+
     
-    
-/*
 
     // Test de la Story #2-fiche_meetup (https://trello.com/c/glufGucb/45-homepage)
     @Test
     public void testFicheMeetup() throws Exception {
         driver.get("https://www.meetup.com/fr-FR/promenades-et-randonnees/");
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
 
-        // clickable title
-        // with meetup name, place, number of members, organisators, a button to join the event, and a picture
+        //region clickable title with meetup name, place, number of members, organisators, a button to join the event, and a picture
+        //region h1 clickable
+        WebElement h1 = driver.findElement(By.cssSelector("h1 > a"));
+        //System.out.println(h1.getText());
+        assertThat(h1, is(notNullValue()));
+        assertThat(driver.getTitle(), containsString(h1.getText()));
+
+        //region check if clickable
+        //return true if can execute h1.click()
+        Boolean isClickable = (Boolean) executor.executeScript(
+                "try{" +
+                    "arguments[0].click();" +
+                    "return true;" +
+                    "}" +
+                    "catch(err){" +
+                    "return false;" +
+                    "}"
+                , h1);
+        System.out.println( (isClickable ? "est clickable " : " pas clickable"));
+        assertThat(isClickable, is(true));
+        //endregion
+
+
+        //endregion
+
+        //region details
+        //WebElement h1Parent = getParent(driver.findElement(By.cssSelector("h1")), 1);
+        //WebElement detailsDiv = getChildByXpath(getSibbling(h1Parent, "div", 1), "div/div");
+        //System.out.println(detailsDiv.getText());
+
+        //location
+        assertThat(driver.findElement(By.cssSelector("a.groupHomeHeaderInfo-cityLink")), is(notNullValue()));
+        //total member
+        assertThat(driver.findElement(By.cssSelector("a.groupHomeHeaderInfo-memberLink")), is(notNullValue()));
+        //organizer
+        assertThat(driver.findElement(By.cssSelector("a.orgInfo-name-superGroup")), is(notNullValue()));
+        //endregion
+
+        //region button join group
+        WebElement joinButton = driver.findElement(By.cssSelector("a#actionButtonLink"));
+        assertThat(joinButton, is(notNullValue()));
+        assertEquals("Rejoindre ce groupe", joinButton.getText());
+        //endregion
+
+        //region introducing picture
+        WebElement pictureDiv = driver.findElement(By.cssSelector(".bannerLockup > div > div.groupHomeHeader-banner"));
+        assertThat(pictureDiv.getAttribute("style"), containsString("background-image:"));
+        //endregion
+
+        //endregion
+
 
         //tab banner with "A propos", "Evénements", "Membres", "Photos", "Discussions", "Plus".
 
@@ -157,13 +214,17 @@ public class FunctionalTest {
         //Si je veux rejoindre le groupe, je dois cliquer sur rejoindre puis entrer mes informations de membre et donc m'identifier via facebook ou google ou identifiant de site. Sinon, je peux aussi m'inscrire et là je dois être rediriger vers /register/?method=email
 
         // Si j'ai une question, je dois pouvoir contacter l'organisateur depuis la fiche de membre. En cliquant sur contacter je dois alors être automatiquement redirigé vers la page de connexion https://secure.meetup.com/fr-FR/login/
+        // seems that click don't work for Gwen
+        /*
         WebElement contactLink = driver.findElement(By.cssSelector(".orgInfo-message"));
         assertEquals(contactLink.getText(), "Contacter");
         contactLink.click();
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         assertThat(driver.getCurrentUrl(), containsString("https://secure.meetup.com/fr-FR/login/"));
-
+        */
     }
+
+    /*
 
     // Test de la Story #2-jobs (https://trello.com/c/glufGucb/45-homepage)
     @Test
