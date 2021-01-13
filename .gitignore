@@ -1,0 +1,7 @@
+unit-tests/bin/
+acceptance-tests/bin/
+functional-tests/bin/
+pixelperfect-tests/bin/
+
+.idea
+.DS_Store
